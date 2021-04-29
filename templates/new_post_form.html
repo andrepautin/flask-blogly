@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- For testing post form. -->
+<h1>Create a post</h1>
+<form method="POST" action="/users/{{user.id}}/posts/new">
+    <p>Title:    
+        <input name="post-title"
+               placeholder="Enter your post title"
+               required>
+    </p>
+    <p>Content:     
+        <input name="post-content" 
+               placeholder="Write some stuff"
+               required>
+    </p>
+    <a href="/users/{{user.id}}">Cancel</a>
+    <button type="submit">Add</button>
+</form>
+{% endblock %}
