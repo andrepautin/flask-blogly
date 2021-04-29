@@ -24,6 +24,8 @@ class User(db.Model):
     image_url = db.Column(db.Text)
     posts = db.relationship('Post', backref='users')
 
+# backref should be 'user' because each post would only have one user
+
 
 class Post(db.Model):
     """Creates post instance/record"""
@@ -35,5 +37,6 @@ class Post(db.Model):
                    autoincrement=True)
     post_title = db.Column(db.String(50), nullable=False)
     post_content = db.Column(db.Text, nullable=False)
-    created = db.Column(db.DateTime, default=datetime.utcnow())
+    created = db.Column(db.DateTime, default=datetime.utcnow)
     post_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+

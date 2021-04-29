@@ -45,7 +45,7 @@ def show_new_user_form():
 
         return redirect("/users")
     else:
-        return render_template("new_user_form.html")
+        return render_template("user_new_form.html")
 
 
 @app.route("/users/<int:user_id>")
@@ -81,20 +81,20 @@ def delete_user(user_id):
 
 @app.route("/users/<int:user_id>/posts/new", methods=["GET", "POST"])
 def handle_post_form(user_id):
-    """Shows form to create new posts"""
+    """Shows form to create new posts and handles submitting a new post"""
     user = User.query.get_or_404(user_id)
     if (request.method == "POST"):
         post_title = request.form['post-title']
         post_content = request.form['post-content']
 
         post = Post(post_title=post_title,
-                    post_content=post_content,
-                    post_user_id=user_id)
-        db.session.add(post)
+                    post_content=post_content)
+        user.posts.append(post)
         db.session.commit()
         return render_template("post_detail.html", user=user, post=post)
+        # redirect after a post to user profile
     else:
-        return render_template("new_post_form.html", user=user)
+        return render_template("post_new_form.html", user=user)
 
 
 @app.route("/posts/<int:post_id>")

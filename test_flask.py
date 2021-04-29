@@ -32,7 +32,7 @@ class UserViewsTestCase(TestCase):
         db.session.commit()
         self.user_id = user.id
 
-        post = Post(post_title="Test Post",
+        post = Post(post_title="Test Post Title 1",
                     post_content="meow meow meow",
                     post_user_id=user.id)
         db.session.add(post)
@@ -101,18 +101,19 @@ class UserViewsTestCase(TestCase):
     def test_post_new_post_form(self):
         """Test to see if a user can create a new post"""
         with app.test_client() as client:
-            d = {"post-title": "Test Post", "post-content": "test test test"}
+            d = {"post-title": "Test Post Title 2", "post-content": "test test test"}
             resp = client.post(f"/users/{self.user_id}/posts/new", data=d, follow_redirects=True)
             html = resp.get_data(as_text=True)
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("test post form submission", html)
+            self.assertIn("Test Post Title 2", html)
 
-    def test_delete_user(self):
+    def test_delete_post(self):
         """Test to see if a user can delete a post"""
         with app.test_client() as client:
 
             resp = client.post(f"/posts/{self.post_id}/delete", follow_redirects=True)
             html = resp.get_data(as_text=True)
             self.assertEqual(resp.status_code, 200)
-            self.assertNotIn("Test Post", html)
+            self.assertNotIn("Test Post Title 1", html)
