@@ -80,7 +80,7 @@ def delete_user(user_id):
 
 
 @app.route("/users/<int:user_id>/posts/new", methods=["GET", "POST"])
-def show_post_form(user_id):
+def handle_post_form(user_id):
     """Shows form to create new posts"""
     user = User.query.get_or_404(user_id)
     if (request.method == "POST"):
@@ -99,5 +99,28 @@ def show_post_form(user_id):
 
 @app.route("/posts/<int:post_id>")
 def show_post(post_id):
+    """Shows post"""
     post = Post.query.get_or_404(post_id)
     return render_template("post_detail.html", post=post)
+
+
+@app.route("/posts/<int:post_id>/edit", methods=["GET", "POST"])
+def handle_post_edit(post_id):
+    """Show edit form for post or submit edits"""
+    post = Post.query.get_or_404(post_id)
+    if (request.method == "POST"):
+        post.post_title = request.form['post-title']
+        post.post_content = request.form['post-content']
+        db.session.commit()
+        return redirect(f"/posts/{post_id}")
+    else:
+        return render_template("post_edit.html", post=post)
+
+
+@app.route("/posts/<int:post_id>/delete", methods=["POST"])
+def delete_post(post_id):
+    """Deletes a post"""
+    post = Post.query.get_or_404(post_id)
+    db.session.delete(post)
+    db.session.commit()
+    return redirect("/users")
