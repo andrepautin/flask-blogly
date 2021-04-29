@@ -17,7 +17,7 @@ connect_db(app)
 
 
 @app.route("/")
-def landing_page():
+def redirect_to_users():
     return redirect("/users")
 
 
@@ -45,6 +45,13 @@ def show_new_user_form():
         return render_template("user-form.html")
 
 
+@app.route("/users/<int:user_id>")
+def show_user_details(user_id):
+    """Shows the user details page"""
+    user = User.query.get_or_404(user_id)
+    return render_template("user-detail.html", user=user)
+
+
 @app.route("/users/<int:user_id>/edit", methods=["GET", "POST"])
 def edit_user(user_id):
     user = User.query.get_or_404(user_id)
@@ -57,3 +64,10 @@ def edit_user(user_id):
         return redirect("/users")
     else:
         return render_template("user-edit.html", user=user)
+
+@app.route("/users/<int:user_id>/delete", methods=["POST"])
+def delete_user(user_id):
+    user = User.query.get_or_404(user_id)
+    db.session.delete(user)
+    db.session.commit()
+    return redirect("/users")
