@@ -5,12 +5,12 @@
 <form action="/posts/{{post.id}}/edit" method="POST">
     <p>Title:    
         <input name="post-title"
-               value="{{ post.title }}"
+               value="{{ post.post_title }}"
                required>
     </p>
     <p>Content:     
         <input name="post-content" 
-               value="{{ post.content }}"
+               value="{{ post.post_content }}"
                required>
     </p>
     
