@@ -13,6 +13,12 @@
                value="{{ post.content }}"
                required>
     </p>
+    
+    {% for tag in tags %}
+    <input type="checkbox" name="{{tag.name}}">
+    <label for="{{tag.name}}">{{tag.name}}</label>
+    {% endfor %}
+
     <p><a href="/posts/{{ post.id }}"> Cancel </a></p>
     <button type="submit">Edit</button>
 </form>

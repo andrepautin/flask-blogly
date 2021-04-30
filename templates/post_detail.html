@@ -6,6 +6,15 @@
 <p>
     {{ post.post_content }}
 </p>
+<p>By {{post.user.first_name}} 
+      {{post.user.last_name}} 
+   on {{post.created}}</p>
+
+<h4>Tags</h4>
+{% for tag in post.tags %}
+<a href="/tags/{{tag.id}}">{{tag.name}}</a>
+{% endfor %}
+
 
 <a href="/users/{{post.post_user_id}}">Back</a>
 <a href="/posts/{{post.id}}/edit">Edit</a>

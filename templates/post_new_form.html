@@ -14,6 +14,12 @@
                placeholder="Write some stuff"
                required>
     </p>
+
+    {% for tag in tags %}
+    <input type="checkbox" name="{{tag.name}}">
+    <label for="{{tag.name}}">{{tag.name}}</label>
+    {% endfor %}
+    
     <a href="/users/{{user.id}}">Cancel</a>
     <button type="submit">Add</button>
 </form>

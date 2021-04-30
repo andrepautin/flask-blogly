@@ -2,7 +2,7 @@
 
 from flask import Flask, request, redirect, render_template
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 
 app = Flask(__name__)
@@ -89,6 +89,7 @@ def handle_post_form(user_id):
 
         post = Post(post_title=post_title,
                     post_content=post_content)
+        
         user.posts.append(post)
         db.session.commit()
         return render_template("post_detail.html", user=user, post=post)
@@ -124,3 +125,28 @@ def delete_post(post_id):
     db.session.delete(post)
     db.session.commit()
     return redirect("/users")
+
+
+@app.route("/tags")
+def list_tags():
+    """Lists all tags"""
+    tags = Tag.query.all()
+    return render_template("tag_listing.html", tags=tags)
+
+@app.route("/tags/<int:tag_id>")
+def show_tag_details(tag_id):
+    """Show details of one tag lists posts that have that tag"""
+    tag = Tag.query.get_or_404(tag_id)
+    return render_template("tag_detail.html", tag=tag)
+
+@app.route("/tags/new", methods=["GET", "POST"])
+def handle_new_tag_form():
+    if (request.method == "POST"):
+        tag_name = request.form['tag-name']
+
+        tag = Tag(name=tag_name)
+        db.session.add(tag)
+        db.session.commit()
+        return redirect("/tags")
+    else:
+        return render_template("tag_create.html")

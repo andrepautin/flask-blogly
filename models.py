@@ -22,7 +22,7 @@ class User(db.Model):
     first_name = db.Column(db.String(20), nullable=False)
     last_name = db.Column(db.String(20), nullable=False)
     image_url = db.Column(db.Text)
-    posts = db.relationship('Post', backref='users')
+    posts = db.relationship('Post', backref='user')
 
 # backref should be 'user' because each post would only have one user
 
@@ -39,4 +39,30 @@ class Post(db.Model):
     post_content = db.Column(db.Text, nullable=False)
     created = db.Column(db.DateTime, default=datetime.utcnow)
     post_user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    
+    tags = db.relationship('Tag', secondary='posttags', backref='posts')
 
+
+class Tag(db.Model):
+    """Creates a tag"""
+
+    __tablename__ = "tags"
+
+    id = db.Column(db.Integer, 
+                   primary_key=True, 
+                   autoincrement=True)
+    
+    name = db.Column(db.String(15), 
+                     unique=True)
+
+class PostTag(db.Model):
+    """Joins posts and tags together"""
+
+    __tablename__ = "posttags"
+
+    post_id = db.Column(db.Integer, 
+                        db.ForeignKey('posts.id'), 
+                        primary_key=True)
+    tag_id = db.Column(db.Integer, 
+                       db.ForeignKey('tags.id'), 
+                       primary_key=True)
